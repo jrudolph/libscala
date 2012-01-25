@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+#
+# Source this file to get handy scala github commands
+# including completion on svn revisions.  Things to try:
+#
+#   gh-commit r24396
+#   gh-find Global
+#   gh-tree src/actors
+#
+
+# OSXcentric - tell me how to do it portably.
+gh-tree () {
+  open "$scalaGitUrl/tree/master/$1"
+}
+gh-sha () {
+  [[ -n "$1" ]] && open "$scalaGitUrl/commit/$1"
+}
+
+gh-commit () {
+  if [[ $1 = r* ]]; then
+    gh-svn "$1"
+  else
+    gh-sha "$1"
+  fi
+}
+
+gh-svn () {
+  [[ -f "$scalaSvnMap" ]] && {
+    sha=$(egrep "^$1 " "$scalaSvnMap" | awk '{ print $2; }' | head -1)
+    [[ -n "$sha" ]] && echo "$1 => $sha" && gh-sha $sha
+  }
+}
+
+gh-find () {
+  [[ -d "$SCALA_SRC_HOME" ]] && ( cd "$SCALA_SRC_HOME" && 
+    for f in $(ack --noenv --scala -f -g "$@" src); do
+      gh-tree "$f"
+    done
+  ) || echo "Can't find scala repo: set \$SCALA_SRC_HOME ."
+}

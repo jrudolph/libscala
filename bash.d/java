@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+#
+
+export javaXxOpts="$libscalaEtc/java6-xx-options.txt"
+export javaXxDiagOpts="$libscalaEtc/java6-xx-diag-options.txt"
+
+# java -XX:+PrintFlagsFinal
+_raw_jvm_opts () {
+  [[ -f "$javaXxOpts" ]] && sed "s/^/$1/" "$javaXxOpts"
+}
+# java -XX:+UnlockDiagnosticVMOptions -XX:+PrintFlagsFinal (minus _raw_jvm_opts)
+_raw_diagnostic_jvm_opts () {
+  [[ -f "$javaXxDiagOpts" ]] && sed "s/^/$1/" "$javaXxDiagOpts"
+}
+
+# TODO - look for -XX:+UnlockDiagnosticVMOptions and include those if seen
+_prefixed_jvm_opts () {
+  local prefix="$1"
+  local cur prev
+  _get_comp_words_by_ref -n : cur prev
+  
+  local opts
+  if [[ $cur == ${prefix}-XX* ]]; then
+    opts=$(_raw_jvm_opts "${prefix}-XX:")
+  else
+    opts="${prefix}-Xmx ${prefix}-Xms ${prefix}-XX:"
+  fi
+  
+  COMPREPLY=( "${COMPREPLY[@]}" $(compgen -W "$opts" -- "${cur}") )
+}
+
+_java_with_jvm_opts () {
+  _java
+  _prefixed_jvm_opts ""
+}
+
+_scala_with_jvm_opts () {
+  _scala_completion
+  _prefixed_jvm_opts "-J"
+} 
