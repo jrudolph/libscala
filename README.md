@@ -1,19 +1,22 @@
-Tools for scala developers.
+Tools for scala developers.  I have a lot more but it is going to take
+me some time to organize everything.
+
+Usage:
 
     source /path/to/libscala.sh   # add to your .profile or similar
     ./git-java/install.sh         # run this one time
 
-If you're lucky, that's it.
+If you're lucky, that's it.  Examples of available things:
 
-    gh-commit <sha|svn> # accepts sha-1 or rev, shows in browser.  Completion on svn!
-    java -XX:           # completes on java -XX: options
+    gh-commit <sha|svn> # accepts sha-1 or rev, shows in browser.  Tab-completion on svn revs!
+    java -XX:           # tab-completion on java -XX: options (a tad verbose at the moment)
     scala -J-XX:        # also completes on -J-XX: options
     gco <tab>           # a git checkout which completes on local branches only
     gh-find Global      # open a browser to those files in trunk matching Global
 
 The git-java part enables you to check jars and *.class files into a
 git repository and see a useful diff.  After you run ./git-java/install.sh,
-run ./git-java/demo.sh to see it in action.  If it worked, you will see this.
+it will tell you to run git-java/demo.sh.  Do so.  You should see this:
 
 ```diff
 diff --git c/A.class w/A.class
@@ -44,5 +47,3 @@ index eb57cde27f..ec9040dd7d 100644
 +##:    getstatic       ###; //Field scala/None$.MODULE$:Lscala/None$;
  ##:    areturn
 ```
-
-There's a lot more in my stable, but I'm still trying to organize.
