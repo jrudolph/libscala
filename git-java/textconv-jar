@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+#
+
+jar tf "$1" | sort

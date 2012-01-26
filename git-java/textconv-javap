@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+#
+
+javapBin=javap
+
+[[ -x $javapBin ]] || javapBin="$JAVA_HOME/bin/javap" || {
+  echo "Cannot locate javap."
+  exit 1
+}
+
+javapArgs="-c -s -private"
+
+# printing inner classes only
+inner-classes () {
+  local class="$1"
+  local seenInner="false"
+  
+  $javapBin -verbose "$class" | tr -d 0-9 | while read line; do
+    if [[ "$line" =~ version: ]]; then
+      echo ""
+      return;
+    elif [[ "$seenInner" == "true" ]]; then
+      [[ "$line" =~ \$anon ]] || echo "$line"
+    elif [[ "$line" =~ InnerClass ]]; then
+      echo "InnerClasses:"
+      seenInner="true"
+    fi    
+  done
+}
+
+# clearly I was tired of this the day I wrote this.
+# performance/sanity improvements very welcome.
+# It's preprocessing the output of javap so that diffs
+# aren't avalanches of meaningless noise as little
+# constants move around.
+javap-cleaner () {
+  "$javapBin" $javapArgs "$1"  |
+    perl -pe 's/^\s+(?<=\s)(\d+)(?=:)/##/;' |
+    perl -pe 's/(?<=#)(\d+)/##/g' |
+    perl -pe 's/(?<=\$)(\d+)/##/g' |
+    perl -pe 's/(?<=\s)(\d+)(?=[ \t]*$)/##/;' |
+    egrep -v '[\00]'
+}
+
+javap-clean () {
+  local path="$1"
+  local dirname=$(dirname "$path")
+  local basename=$(basename "$path")
+  local class=${basename%%.class}
+    
+  ( cd "$dirname" && inner-classes "$class" && javap-cleaner "$class" )
+}
+
+javap-clean "$1"
