@@ -2,7 +2,7 @@
 #
 # Demos diffing classfiles via git.
 
-dir=$(mktemp -dt git-java-demo)
+dir=$(mktemp -d ${TMPDIR:-/tmp}/git-java-demo.XXXXXXXXXX)
 cd "$dir" || exit 1;
 
 cat >a.scala <<EOM
@@ -32,4 +32,4 @@ rm *.class
 git add -fu .
 git commit -m "after"
 
-git --no-pager diff --color head^ A.class
+git --no-pager diff --color HEAD^ A.class
