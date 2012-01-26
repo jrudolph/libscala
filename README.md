@@ -47,3 +47,29 @@ index eb57cde27f..ec9040dd7d 100644
 +##:    getstatic       ###; //Field scala/None$.MODULE$:Lscala/None$;
  ##:    areturn
 ```
+
+And for the hotspot junkie in your life:
+
+```bash
+% java -XX:+Print<tab>
+-XX:+PrintAdaptiveSizePolicy              -XX:+PrintJavaStackAtFatalState
+-XX:+PrintClassHistogram                  -XX:+PrintJNIGCStalls
+-XX:+PrintClassHistogramAfterFullGC       -XX:+PrintJNIResolving
+-XX:+PrintClassHistogramBeforeFullGC      -XX:+PrintOldPLAB
+-XX:+PrintCMSInitiationStatistics         -XX:+PrintOopAddress
+-XX:+PrintCommandLineFlags                -XX:+PrintParallelOldGCPhaseTimes
+-XX:+PrintCompilation                     -XX:+PrintPLAB
+-XX:+PrintConcurrentLocks                 -XX:+PrintPreciseBiasedLockingStatistics
+-XX:+PrintFlagsFinal                      -XX:+PrintPromotionFailure
+-XX:+PrintFlagsInitial                    -XX:+PrintReferenceGC
+-XX:+PrintGC                              -XX:+PrintRevisitStats
+-XX:+PrintGCApplicationConcurrentTime     -XX:+PrintSafepointStatistics
+-XX:+PrintGCApplicationStoppedTime        -XX:+PrintSharedSpaces
+-XX:+PrintGCDateStamps                    -XX:+PrintTenuringDistribution
+-XX:+PrintGCDetails                       -XX:+PrintTieredEvents
+-XX:+PrintGCTaskTimeStamps                -XX:+PrintTLAB
+-XX:+PrintGCTimeStamps                    -XX:+PrintVMOptions
+-XX:+PrintHeapAtGC                        -XX:+PrintVMQWaitTime
+-XX:+PrintHeapAtGCExtended                -XX:+PrintWarnings
+-XX:+PrintHeapAtSIGBREAK                  
+```
