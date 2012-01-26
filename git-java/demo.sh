@@ -12,13 +12,23 @@ final class A {
 }
 EOM
 
+scalac=scalac
+type "$scalac" &>/dev/null || {
+  [[ -n $SCALA_HOME ]] && scalac="$SCALA_HOME/bin/scalac"
+}
+type "$scalac" &>/dev/null || {
+  echo "No scalac in your path, and nothing at SCALA_HOME either."
+  echo "Are you sure you're a scala developer? Install scala and try again."
+  exit 1;
+}
+
 git init
-scalac a.scala
+"$scalac" a.scala
 git add -f .
 git commit -m "before"
 
 rm *.class
-scalac -optimise a.scala
+"$scalac" -optimise a.scala
 git add -fu .
 git commit -m "after"
 
