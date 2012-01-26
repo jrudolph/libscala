@@ -51,6 +51,8 @@ index eb57cde27f..ec9040dd7d 100644
 And for the hotspot junkie in your life:
 
 ```bash
+% java -XX:<tab>
+Display all 998 possibilities? (y or n)
 % java -XX:+Print<tab>
 -XX:+PrintAdaptiveSizePolicy              -XX:+PrintJavaStackAtFatalState
 -XX:+PrintClassHistogram                  -XX:+PrintJNIGCStalls
