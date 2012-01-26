@@ -38,3 +38,6 @@ complete -F _scala_svn_rev_completion gh-commit gh-svn
 alias gbr='git branch'
 alias gco='git checkout'
 complete -F _git_branch_local_only gbr gco
+
+# Delete the cached bytecode disassemblies
+alias git-javap-clean='git update-ref -d refs/notes/textconv/javap'

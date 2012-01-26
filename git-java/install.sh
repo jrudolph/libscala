@@ -14,13 +14,17 @@ defaultAttributes="$HOME/.gitattributes"
 die () {
   echo "$@" && exit 1
 }
+log () {
+  echo >&2 "$@"
+}
+  
 gitConfig () {
   git config --global "$@"
 }
 gitConfigAdd () {
   key="$1"
   value="$2"
-  gitConfig --add "$key" "$value" && echo "[created] config $key = $value"
+  gitConfig --add "$key" "$value" && log "[create] config $key = $value"
 }
 gitConfigGet () {
   gitConfig --get "$@"
@@ -28,7 +32,7 @@ gitConfigGet () {
 
 gitConfigAddIfAbsent () {
   if gitConfigGet "$1" >/dev/null; then
-    echo "[exists]    config  $1 = $(gitConfigGet $1)"
+    log "[exists]    config  $1 = $(gitConfigGet $1)"
   else
     gitConfigAdd "$@"
   fi
@@ -40,37 +44,35 @@ gitAttributesFile () {
     gitConfigAdd core.attributesfile "$defaultAttributes"
     file=$(gitConfigGet core.attributesfile)
   }
-  if [[ -f "$file" ]]; then
-    echo "$file"
-  else
-    eval "touch $file && ls -1 $file"
-  fi
+  # manual twiddle expansion, whee
+  [[ -f "$file" ]] || file=$(eval "echo $file")
+  [[ -f "$file" ]] || {
+    touch "$file" && log "[create]      file  $file"
+  }
+  echo "$file"
 }
     
 attributesFile="$(gitAttributesFile)"
-[[ -f "$attributesFile" ]] || {
-  touch "$attributesFile" && echo "[created] attributes file $attributesFile"
-}
 
 gitAttributeAdd () {
   local ext="$1"
   local handler="$2"
   
-  [[ -f "$attributesFile" ]] && {
-    existing="$(egrep "=${handler}\b" "$attributesFile")"
-    
-    if [[ -n "$existing" ]]; then
-      echo "[exists] attribute  $existing"
-    else
-      line="*.${ext} diff=${handler}"
-      echo "$line" >>"$attributesFile"
-      echo "[created] attribute $line"
-    fi
-  }
+  existing="$(egrep "=${handler}\b" "$attributesFile")"
+  
+  if [[ -n "$existing" ]]; then
+    log "[exists] attribute  $existing"
+  else
+    line="*.${ext} diff=${handler}"
+    echo "$line" >>"$attributesFile"
+    log "[create] attribute $line"
+  fi
 }
 
-gitAttributeAdd class javap
-gitAttributeAdd jar jar-toc
+[[ -f "$attributesFile" ]] && {
+  gitAttributeAdd class javap
+  gitAttributeAdd jar jar-toc
+}
 
 gitConfigAddIfAbsent diff.javap.textconv "$gitJavaDir/textconv-javap"
 gitConfigAddIfAbsent diff.javap.cachetextconv true
