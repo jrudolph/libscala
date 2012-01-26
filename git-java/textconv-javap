@@ -2,8 +2,9 @@
 #
 
 javapBin=javap
+[[ -x "$javapBin" ]] || javapBin="$JDK_HOME/bin/javap"
 [[ -x "$javapBin" ]] || javapBin="$JAVA_HOME/bin/javap"
-[[ -x "$javapBin" || {
+[[ -x "$javapBin" ]] || {
   echo "Cannot locate javap."
   exit 1
 }

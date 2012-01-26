@@ -2,6 +2,8 @@
 #
 # Demos diffing classfiles via git.
 
+set -e
+
 dir=$(mktemp -d ${TMPDIR:-/tmp}/git-java-demo.XXXXXXXXXX)
 cd "$dir" || exit 1;
 
@@ -13,11 +15,9 @@ final class A {
 EOM
 
 scalac=scalac
-type "$scalac" &>/dev/null || {
-  [[ -n $SCALA_HOME ]] && scalac="$SCALA_HOME/bin/scalac"
-}
-type "$scalac" &>/dev/null || {
-  echo "No scalac in your path, and nothing at SCALA_HOME either."
+[[ -x "$scalac" ]] || scalac="$SCALA_HOME/bin/scalac"
+[[ -x "$scalac" ]] || {
+  echo "No scalac in your path, and none at SCALA_HOME either."
   echo "Are you sure you're a scala developer? Install scala and try again."
   exit 1;
 }
