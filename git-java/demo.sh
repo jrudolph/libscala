@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 #
+# Demos diffing classfiles via git.
 
 dir=$(mktemp -dt git-java-demo)
 cd "$dir" || exit 1;
@@ -21,4 +22,4 @@ scalac -optimise a.scala
 git add -fu .
 git commit -m "after"
 
-git --no-pager diff head^ A.class
+git --no-pager diff --color head^ A.class

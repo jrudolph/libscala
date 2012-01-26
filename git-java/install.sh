@@ -78,5 +78,9 @@ gitConfigAddIfAbsent diff.javap.cachetextconv true
 gitConfigAddIfAbsent diff.jar-toc.textconv "$gitJavaDir/textconv-jar"
 gitConfigAddIfAbsent diff.jar-toc.cachetextconv true
 
-echo ""
-echo "git-java setup complete.  Try running git-java/demo.sh"
+cat <<EOM
+
+git-java setup complete.  Now run this:
+
+git-java/demo.sh
+EOM
